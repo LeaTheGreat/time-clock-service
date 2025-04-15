@@ -1,4 +1,5 @@
-import type { MonthlyReport, PunchEvent} from '../models.ts'
+import type { MonthlyReport, PunchEventType} from '../models/models.ts'
+import { PunchEvent } from '../classes/PunchEvent.ts'
 
 /**
  * Calculates a monthly report for an employee.
@@ -49,4 +50,25 @@ export const calculateMonthlyReport = (
         dailyHours,
         totalHours,
     }
+}
+
+export const isValidEventSequence = (
+    lastEvent: PunchEvent | undefined,
+    newEventType: PunchEventType
+): boolean => {
+    if (!lastEvent) {
+        return true
+    }
+
+    // Check if the last event is of the same type as the new event
+    return lastEvent.eventType !== newEventType
+}
+
+export const isValidEventType = (eventType: string): boolean => {
+    return eventType === 'in' || eventType === 'out'
+}
+
+export const isValidTimestamp = (timestamp: string): boolean => {
+    const date = new Date(timestamp)
+    return !isNaN(date.getTime())
 }

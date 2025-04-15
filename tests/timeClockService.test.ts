@@ -1,5 +1,5 @@
 import { calculateMonthlyReport } from '../src/services/timeClockService.js'
-import { PunchEvent } from '../src/models.js'
+import { PunchEvent, PunchEventTypeEnum } from '../src/models/models.js'
 
 describe('calculateMonthlyReport', () => {
     const employeeName = 'Employee Doe'
@@ -10,12 +10,12 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-01T08:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-04-01T17:00:00Z')
             }
         ]
@@ -28,22 +28,22 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-01T08:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-04-01T12:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-02T09:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-04-02T17:00:00Z')
             }
         ]
@@ -57,22 +57,22 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-02-28T23:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-03-01T02:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-05-30T22:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-06-01T01:00:00Z')
             }
         ]
@@ -86,7 +86,7 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName: "Another Employee",
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-10T08:00:00Z')
             }
         ]
@@ -99,17 +99,17 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-01T08:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-01T09:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-02T10:00:00Z')
             }
         ]
@@ -125,12 +125,12 @@ describe('calculateMonthlyReport', () => {
         const events: PunchEvent[] = [
             {
                 employeeName,
-                eventType: 'in',
+                eventType: PunchEventTypeEnum.IN,
                 timestamp: new Date('2025-04-30T22:00:00Z')
             },
             {
                 employeeName,
-                eventType: 'out',
+                eventType: PunchEventTypeEnum.OUT,
                 timestamp: new Date('2025-05-01T06:00:00Z')
             }
         ]

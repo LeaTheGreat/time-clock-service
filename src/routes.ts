@@ -1,9 +1,13 @@
-import { Router } from 'express'
-import type { Request, Response} from 'express'
-import type { PunchEvent, MonthlyReport } from './models.ts'
-import { calculateMonthlyReport } from './services/timeClockService.ts'
+import e, { Router } from 'express'
+import type { Request, Response } from 'express'
+import type {  MonthlyReport } from './models/models.ts'
+import { calculateMonthlyReport, isValidEventSequence, isValidEventType, isValidTimestamp } from './services/timeClockService.ts'
+import { PunchEventTypeEnum } from './models/models.ts'
+import { PunchEvent } from './classes/PunchEvent.ts'
 
 const router = Router()
+
+
 
 // In-memory storage for employee punch events.
 const employeeRecords: Map<string, PunchEvent[]> = new Map()
@@ -20,27 +24,28 @@ const employeeRecords: Map<string, PunchEvent[]> = new Map()
  */
 router.post('/punch', (req: Request, res: Response) => {
     const { employeeName, eventType, timestamp } = req.body
+    let punchEvent: PunchEvent
 
-    if (!employeeName || !eventType) {
-        return res.status(400).json({ error: 'employeeName and eventType are required.' })
+    try {
+        punchEvent = PunchEvent.create(employeeName, eventType, timestamp)
     }
-    if (eventType !== 'in' && eventType !== 'out') {
-        return res.status(400).json({ error: "Invalid eventType. Must be 'in' or 'out'." })
-    }
-
-    let eventTimestamp: Date
-    if (timestamp) {
-        eventTimestamp = new Date(timestamp)
-        if (isNaN(eventTimestamp.getTime())) {
-            return res.status(400).json({ error: 'Invalid timestamp format.' })
-        }
-    } else {
-        eventTimestamp = new Date()
+    catch (error: Error ) {
+        return res.status(400).json({ error: error.message })
     }
 
-    const event: PunchEvent = { employeeName, eventType, timestamp: eventTimestamp }
-    const records = employeeRecords.get(employeeName) || []
-    records.push(event)
+    const records = employeeRecords.get(employeeName)
+
+    if (!records) {
+        return res.status(404).json({ error: 'Employee not found.' })
+    }
+
+    const lastEvent = records[records.length - 1]
+
+    if (!isValidEventSequence(lastEvent, eventType)) {
+        return res.status(422).json({ error: `Invalid sequence of events. Cannot have consecutive '${eventType}' events.` })
+    }
+
+    records.push(punchEvent)
     employeeRecords.set(employeeName, records)
 
     return res.status(200).json({ message: 'Punch event recorded successfully.' })
