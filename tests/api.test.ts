@@ -1,6 +1,7 @@
 import request from 'supertest'
-import app from '../src/index.js'
+import app from '../src/index.ts'
 import { Server } from 'http'
+import { ClockEventTypeEnum } from '../src/types/clockEventTypes.ts'
 
 describe('Time Clock API Integration Tests', () => {
     let server: Server
@@ -22,7 +23,7 @@ describe('Time Clock API Integration Tests', () => {
             .post('/punch')
             .send({
                 employeeName: employee,
-                eventType: 'in',
+                eventType: ClockEventTypeEnum.CLOCK_IN,
                 timestamp: '2025-04-01T08:00:00Z'
             })
         expect(resIn.status).toBe(200)
@@ -32,7 +33,7 @@ describe('Time Clock API Integration Tests', () => {
             .post('/punch')
             .send({
                 employeeName: employee,
-                eventType: 'out',
+                eventType: ClockEventTypeEnum.CLOCK_OUT,
                 timestamp: '2025-04-01T17:00:00Z'
             })
         expect(resOut.status).toBe(200)
@@ -40,13 +41,13 @@ describe('Time Clock API Integration Tests', () => {
         // Retrieve the report for April 2025.
         const resReport = await request(app).get(`/report/${employee}/2025/4`)
         expect(resReport.status).toBe(200)
-        const data = resReport.body
+        const data = resReport.body.report
         expect(data.totalHours).toBeCloseTo(9, 1)
         expect(data.dailyHours['2025-04-01']).toBeCloseTo(9, 1)
     })
 
-    it('should return 404 for non-existent employee', async () => {
+    it('should return 400 for non-existent employee or employee without any recorded events', async () => {
         const res = await request(app).get('/report/NonExistentEmployee/2025/4')
-        expect(res.status).toBe(404)
+        expect(res.status).toBe(400)
     })
 })
