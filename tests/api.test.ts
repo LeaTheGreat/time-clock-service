@@ -46,8 +46,8 @@ describe('Time Clock API Integration Tests', () => {
         expect(data.dailyHours['2025-04-01']).toBeCloseTo(9, 1)
     })
 
-    it('should return 400 for non-existent employee or employee without any recorded events', async () => {
+    it('should return 404 for non-existent employee or employee without any recorded events', async () => {
         const res = await request(app).get('/report/NonExistentEmployee/2025/4')
-        expect(res.status).toBe(400)
+        expect(res.status).toBe(404)
     })
 })

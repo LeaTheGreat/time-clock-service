@@ -92,7 +92,9 @@ describe('TimeClockService', () => {
         }
     ]
 
-    await Promise.all(events.map(event => timeClockService.recordEvent(event)))
+    for (const event of events) {
+        await timeClockService.recordEvent(event)
+    }
 
     const report = await timeClockService.calculateMonthlyReport(employeeName, year, month)
 
@@ -124,7 +126,9 @@ describe('TimeClockService', () => {
         }
     ]
 
-    await Promise.all(events.map(event => timeClockService.recordEvent(event)))
+    for (const event of events) {
+        await timeClockService.recordEvent(event)
+    }
 
     const report = await timeClockService.calculateMonthlyReport(employeeName, year, month)
 
@@ -157,8 +161,10 @@ describe('TimeClockService', () => {
         }
     ]
 
-    await Promise.all(events.map(event => timeClockService.recordEvent(event)))
-
+    for (const event of events) {
+        await timeClockService.recordEvent(event)
+    }
+    
     const report = await timeClockService.calculateMonthlyReport(employeeName, year, month)
 
     expect(report.totalHours).toBe(0)
